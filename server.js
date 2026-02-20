@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.VISUAL_CROSSING_KEY;
 const BASE_URL = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline';
 
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/weather', async (req, res) => {
     const { location, unit } = req.query;

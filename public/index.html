@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Forecast</h1>
+        <form id="location-form">
+            <input type="text" id="location-input" placeholder="Enter location" required>
+            <button type="submit">Get Weather</button>
+        </form>
+        <div class="toggle-container">
+            <label for="unit-toggle">Display in:</label>
+            <select id="unit-toggle">
+                <option value="us">Fahrenheit (°F)</option>
+                <option value="metric">Celsius (°C)</option>
+            </select>
+        </div>
+        <div id="weather-display"></div>
+        <div id="loading" style="display:none;">Loading...</div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

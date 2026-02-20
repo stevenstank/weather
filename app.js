@@ -55,19 +55,37 @@ form.addEventListener('submit', async (e) => {
     const unit = unitToggle.value;
     if (!location) return;
     setLoading(true);
-    const data = await fetchWeather(location, unit);
-    const info = processWeatherData(data);
-    displayWeather(info, unit);
+    try {
+        const data = await fetchWeather(location, unit);
+        const info = processWeatherData(data);
+        if (!info) {
+            document.getElementById('weather-display').innerHTML = '<span style="color:red;">No weather data found.<br>Check the console for errors.</span>';
+        } else {
+            displayWeather(info, unit);
+        }
+        lastLocation = location;
+    } catch (err) {
+        document.getElementById('weather-display').innerHTML = '<span style="color:red;">Error fetching weather.<br>Check the console for details.</span>';
+        console.error('Weather fetch error:', err);
+    }
     setLoading(false);
-    lastLocation = location;
 });
 
 unitToggle.addEventListener('change', async () => {
     if (!lastLocation) return;
     setLoading(true);
-    const unit = unitToggle.value;
-    const data = await fetchWeather(lastLocation, unit);
-    const info = processWeatherData(data);
-    displayWeather(info, unit);
+    try {
+        const unit = unitToggle.value;
+        const data = await fetchWeather(lastLocation, unit);
+        const info = processWeatherData(data);
+        if (!info) {
+            document.getElementById('weather-display').innerHTML = '<span style="color:red;">No weather data found.<br>Check the console for errors.</span>';
+        } else {
+            displayWeather(info, unit);
+        }
+    } catch (err) {
+        document.getElementById('weather-display').innerHTML = '<span style="color:red;">Error fetching weather.<br>Check the console for details.</span>';
+        console.error('Weather fetch error:', err);
+    }
     setLoading(false);
 });
