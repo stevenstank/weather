@@ -1,2 +1,2 @@
 # weather
-a weather app
+a weather forecast app
