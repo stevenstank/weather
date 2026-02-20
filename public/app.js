@@ -2,13 +2,22 @@ async function fetchWeather(location, unit = 'us') {
     const url = `/api/weather?location=${encodeURIComponent(location)}&unit=${unit}`;
     try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) {
+            let details = '';
+            try {
+                const body = await response.json();
+                details = body && body.error ? body.error : JSON.stringify(body);
+            } catch (e) {
+                details = await response.text();
+            }
+            throw new Error(`Server returned ${response.status}: ${details}`);
+        }
         const data = await response.json();
         console.log('Raw API data:', data);
         return data;
     } catch (error) {
         console.error('Fetch error:', error);
-        return null;
+        throw error;
     }
 }
 
@@ -26,9 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!location) return;
         weatherDisplay.innerHTML = '';
         loading.style.display = 'block';
-        const data = await fetchWeather(location, unit);
+        let data;
+        try {
+            data = await fetchWeather(location, unit);
+        } catch (err) {
+            loading.style.display = 'none';
+            weatherDisplay.innerHTML = `<p>${err.message}</p>`;
+            return;
+        }
         loading.style.display = 'none';
-            if (data && data.address) {
+        if (data && data.address) {
                 const temp = data.currentConditions && data.currentConditions.temp !== undefined ? data.currentConditions.temp : 'N/A';
                 const unitSymbol = unit === 'us' ? 'F' : 'C';
                 const description = data.description || '';
